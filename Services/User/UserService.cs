@@ -2,7 +2,6 @@
 using User_EFC_Interceptor.Database;
 using User_EFC_Interceptor.Models;
 using User_EFC_Interceptor.Models.DTO;
-using User_EFC_Interceptor.Models.Entities;
 using UserEntity = User_EFC_Interceptor.Models.Entities.User;
 
 namespace User_EFC_Interceptor.Services.User
@@ -10,10 +9,11 @@ namespace User_EFC_Interceptor.Services.User
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext _db;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(ApplicationDbContext db)
+        public UserService(ApplicationDbContext db, ILogger<UserService> logger)
         {
-            _db = db;
+            (_db, _logger) = (db, logger);
         }
 
         public async Task<ServiceResult<bool>> AddUser(UserAddDTO userData)
@@ -22,6 +22,7 @@ namespace User_EFC_Interceptor.Services.User
             {
                 if (await CheckUserExists(userData.Username) != null)
                 {
+                    _logger.LogWarning("User with username '{username}' already exists", userData.Username);
                     return new ServiceResult<bool>(false, $"User with username '{userData.Username}' already exists");
                 }
 
@@ -35,6 +36,7 @@ namespace User_EFC_Interceptor.Services.User
             }
             catch
             {
+                _logger.LogError("Error occured while trying to add user to database");
                 return new ServiceResult<bool>(false, "Error occured while trying to add user to database");
             }
 
@@ -48,6 +50,7 @@ namespace User_EFC_Interceptor.Services.User
                 var user = await CheckUserExists(username);
                 if (user is null)
                 {
+                    _logger.LogWarning("User with username '{username}' doesn't exist", username);
                     return new ServiceResult<string?>(null, $"User with username '{username}' doesn't exist");
                 }
 
@@ -55,6 +58,7 @@ namespace User_EFC_Interceptor.Services.User
             }
             catch (Exception)
             {
+                _logger.LogError("Error occured while trying to get user phrase");
                 return new ServiceResult<string?>(null, "Error occured while trying to get user phrase");
             }
         }
