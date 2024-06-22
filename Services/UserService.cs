@@ -31,7 +31,7 @@ namespace User_EFC_Interceptor.Services
                 _db.Users.Add(user);
                 _db.SaveChanges();
             }
-            catch (Exception)
+            catch
             {
                 return new ServiceResult<bool>(false, "Error occured while trying to add user to database");
             }
@@ -41,13 +41,20 @@ namespace User_EFC_Interceptor.Services
 
         public ServiceResult<string?> GetUserPhrase(string username)
         {
-            var user = CheckUserExists(username);
-            if (user is null)
+            try
             {
-                return new ServiceResult<string?>(null, $"User with username '{username}' doesn't exist");
-            }
+                var user = CheckUserExists(username);
+                if (user is null)
+                {
+                    return new ServiceResult<string?>(null, $"User with username '{username}' doesn't exist");
+                }
 
-            return new ServiceResult<string?>(user.Phrase);
+                return new ServiceResult<string?>(user.Phrase);
+            }
+            catch (Exception)
+            {
+                return new ServiceResult<string?>(null, "Error occured while trying to get user phrase");
+            }
         }
 
         private User? CheckUserExists(string username) 
