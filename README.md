@@ -9,9 +9,11 @@ Web API with `Enitiy Framework Core` `Interceptor` usage for `User` model
 - **AutoMapper**
 
 ## Description
-`Enitiy Framework Core` `Interceptor` in app let separate `convert model logic` from `businnes logic`:
+`Enitiy Framework Core` `Interceptor` in app let separate `convert model logic` from `business logic`:
 - `[APP -> DB]`: Before adding the `User` to the DB, the `User.Phrase` is encrypted
 - `[DB -> APP]`: Before receiving the `User.Phrase` in the App, the `User.Phrase` is decrypted
+
+![interceptor_diagram](interceptor_diagram.PNG)
 
 ## Usage
 API has 2 endpoints:
