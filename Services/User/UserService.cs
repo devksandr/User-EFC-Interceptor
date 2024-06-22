@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using User_EFC_Interceptor.Database;
 using User_EFC_Interceptor.Models;
 using User_EFC_Interceptor.Models.DTO;
@@ -10,10 +11,11 @@ namespace User_EFC_Interceptor.Services.User
     {
         private readonly ApplicationDbContext _db;
         private readonly ILogger<UserService> _logger;
+        private readonly IMapper _mapper;
 
-        public UserService(ApplicationDbContext db, ILogger<UserService> logger)
+        public UserService(ApplicationDbContext db, ILogger<UserService> logger, IMapper mapper)
         {
-            (_db, _logger) = (db, logger);
+            (_db, _logger, _mapper) = (db, logger, mapper);
         }
 
         public async Task<ServiceResult<bool>> AddUser(UserAddDTO userData)
@@ -26,11 +28,7 @@ namespace User_EFC_Interceptor.Services.User
                     return new ServiceResult<bool>(false, $"User with username '{userData.Username}' already exists");
                 }
 
-                var user = new UserEntity
-                {
-                    Username = userData.Username,
-                    Phrase = userData.Phrase
-                };
+                var user = _mapper.Map<UserEntity>(userData);
                 await _db.Users.AddAsync(user);
                 await _db.SaveChangesAsync();
             }
