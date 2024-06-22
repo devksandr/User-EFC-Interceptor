@@ -5,7 +5,7 @@ namespace User_EFC_Interceptor.Services
 {
     public interface IUserService
     {
-        public ServiceResult<bool> AddUser(UserAddDTO userData);
-        public ServiceResult<string?> GetUserPhrase(string username);
+        public Task<ServiceResult<bool>> AddUser(UserAddDTO userData);
+        public Task<ServiceResult<string?>> GetUserPhrase(string username);
     }
 }

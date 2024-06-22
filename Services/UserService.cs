@@ -1,4 +1,5 @@
-﻿using User_EFC_Interceptor.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using User_EFC_Interceptor.Database;
 using User_EFC_Interceptor.Models;
 using User_EFC_Interceptor.Models.DTO;
 using User_EFC_Interceptor.Models.Entities;
@@ -14,11 +15,11 @@ namespace User_EFC_Interceptor.Services
             _db = db;
         }
 
-        public ServiceResult<bool> AddUser(UserAddDTO userData)
+        public async Task<ServiceResult<bool>> AddUser(UserAddDTO userData)
         {
             try
             {
-                if (CheckUserExists(userData.Username) != null)
+                if (await CheckUserExists(userData.Username) != null)
                 {
                     return new ServiceResult<bool>(false, $"User with username '{userData.Username}' already exists");
                 }
@@ -28,8 +29,8 @@ namespace User_EFC_Interceptor.Services
                     Username = userData.Username,
                     Phrase = userData.Phrase
                 };
-                _db.Users.Add(user);
-                _db.SaveChanges();
+                await _db.Users.AddAsync(user);
+                await _db.SaveChangesAsync();
             }
             catch
             {
@@ -39,11 +40,11 @@ namespace User_EFC_Interceptor.Services
             return new ServiceResult<bool>(true);
         }
 
-        public ServiceResult<string?> GetUserPhrase(string username)
+        public async Task<ServiceResult<string?>> GetUserPhrase(string username)
         {
             try
             {
-                var user = CheckUserExists(username);
+                var user = await CheckUserExists(username);
                 if (user is null)
                 {
                     return new ServiceResult<string?>(null, $"User with username '{username}' doesn't exist");
@@ -57,7 +58,7 @@ namespace User_EFC_Interceptor.Services
             }
         }
 
-        private User? CheckUserExists(string username) 
-            => _db.Users.FirstOrDefault(u => u.Username == username);
+        private async Task<User?> CheckUserExists(string username) 
+            => await _db.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
 }

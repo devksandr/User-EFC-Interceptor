@@ -15,9 +15,9 @@ namespace User_EFC_Interceptor.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddUser([FromForm] UserAddDTO userData)
+        public async Task<IActionResult> AddUser([FromForm] UserAddDTO userData)
         {
-            var result = _userService.AddUser(userData);
+            var result = await _userService.AddUser(userData);
             if (!result.Data)
             {
                 return BadRequest(result.Message);
@@ -26,9 +26,9 @@ namespace User_EFC_Interceptor.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserPhrase(string username)
+        public async Task<IActionResult> GetUserPhrase(string username)
         {
-            var result = _userService.GetUserPhrase(username);
+            var result = await _userService.GetUserPhrase(username);
             if (result.Data is null)
             {
                 return BadRequest(result.Message);
