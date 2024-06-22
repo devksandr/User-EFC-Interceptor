@@ -3,8 +3,9 @@ using User_EFC_Interceptor.Database;
 using User_EFC_Interceptor.Models;
 using User_EFC_Interceptor.Models.DTO;
 using User_EFC_Interceptor.Models.Entities;
+using UserEntity = User_EFC_Interceptor.Models.Entities.User;
 
-namespace User_EFC_Interceptor.Services
+namespace User_EFC_Interceptor.Services.User
 {
     public class UserService : IUserService
     {
@@ -24,7 +25,7 @@ namespace User_EFC_Interceptor.Services
                     return new ServiceResult<bool>(false, $"User with username '{userData.Username}' already exists");
                 }
 
-                var user = new User
+                var user = new UserEntity
                 {
                     Username = userData.Username,
                     Phrase = userData.Phrase
@@ -36,7 +37,7 @@ namespace User_EFC_Interceptor.Services
             {
                 return new ServiceResult<bool>(false, "Error occured while trying to add user to database");
             }
-            
+
             return new ServiceResult<bool>(true);
         }
 
@@ -58,7 +59,7 @@ namespace User_EFC_Interceptor.Services
             }
         }
 
-        private async Task<User?> CheckUserExists(string username) 
+        private async Task<UserEntity?> CheckUserExists(string username)
             => await _db.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
 }

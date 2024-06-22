@@ -1,7 +1,7 @@
 ﻿using User_EFC_Interceptor.Models;
 using User_EFC_Interceptor.Models.DTO;
 
-namespace User_EFC_Interceptor.Services
+namespace User_EFC_Interceptor.Services.User
 {
     public interface IUserService
     {

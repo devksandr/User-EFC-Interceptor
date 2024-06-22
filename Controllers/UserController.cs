@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using User_EFC_Interceptor.Models.DTO;
-using User_EFC_Interceptor.Services;
+using User_EFC_Interceptor.Services.User;
 
 namespace User_EFC_Interceptor.Controllers
 {
